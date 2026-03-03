@@ -1,0 +1,251 @@
+/**
+ * LuxFinance — Página Objetivos
+ */
+
+.lux-objetivos .lux-page-header {
+  margin-bottom: 8px;
+}
+
+.lux-objetivos .lux-summary-cards {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 20px 20px;
+  scrollbar-width: none;
+}
+
+.lux-objetivos .lux-summary-cards::-webkit-scrollbar {
+  display: none;
+}
+
+.lux-objetivos .lux-summary-card {
+  flex-shrink: 0;
+  min-width: 120px;
+  padding: 16px;
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-objetivos .lux-summary-card span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lux-text-secondary);
+}
+
+.lux-objetivos .lux-summary-card strong {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  display: block;
+  margin-top: 4px;
+}
+
+.lux-objetivos .lux-goals-list {
+  padding: 0 20px 100px;
+}
+
+.lux-objetivos .lux-balance-section,
+.lux-objetivos .lux-add-goal-section {
+  padding: 0 20px 24px;
+}
+
+.lux-objetivos .lux-balance-card,
+.lux-objetivos .lux-add-goal-card {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+  margin-bottom: 20px;
+}
+
+/* ----- Calendario de objetivos: estilo metas/hitos ----- */
+.lux-objetivos .goals-calendar-wrap {
+  background: linear-gradient(180deg, var(--lux-primary-pale) 0%, var(--lux-surface) 100%);
+  border-radius: var(--lux-radius-lg);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+  border: 1px solid rgba(109, 40, 217, 0.12);
+}
+
+.lux-objetivos .goals-calendar {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.lux-objetivos .cal-header {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--lux-primary);
+  padding: 14px 16px;
+  background: var(--lux-surface-muted);
+  border-bottom: 2px solid var(--lux-primary-pale);
+}
+
+.lux-objetivos .cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  padding: 8px 8px 4px;
+  background: var(--lux-surface-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--lux-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.lux-objetivos .cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding: 8px;
+  min-height: 200px;
+}
+
+.lux-objetivos .cal-day {
+  min-height: 52px;
+  padding: 6px;
+  border-radius: var(--lux-radius-btn);
+  background: var(--lux-bg);
+  border: 1px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.lux-objetivos .cal-day.cal-empty {
+  background: transparent;
+  border-color: transparent;
+  visibility: hidden;
+}
+
+.lux-objetivos .cal-day:not(.cal-empty):hover {
+  background: var(--lux-surface-muted);
+}
+
+.lux-objetivos .cal-day.cal-has-goal {
+  border-color: var(--lux-primary);
+  background: var(--lux-primary-pale);
+  position: relative;
+}
+
+.lux-objetivos .cal-day.cal-has-goal::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lux-primary);
+}
+
+.lux-objetivos .cal-num {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--lux-text-secondary);
+}
+
+.lux-objetivos .cal-day.cal-has-goal .cal-num {
+  color: var(--lux-primary);
+}
+
+.lux-objetivos .cal-goal {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--lux-primary);
+  background: var(--lux-surface);
+  padding: 3px 6px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid var(--lux-primary-pale);
+  line-height: 1.2;
+}
+
+.lux-objetivos .cal-goal:hover {
+  background: var(--lux-primary);
+  color: var(--lux-text-on-primary);
+}
+
+/* Tarjetas de objetivo con más identidad de "meta" */
+.lux-objetivos .lux-goal-card {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--lux-shadow);
+  border-left: 4px solid var(--lux-primary);
+}
+
+.lux-objetivos .lux-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.lux-objetivos .lux-goal-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0;
+}
+
+.lux-objetivos .lux-goal-pct {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--lux-primary);
+  background: var(--lux-primary-pale);
+  padding: 4px 10px;
+  border-radius: var(--lux-radius-pill);
+}
+
+.lux-objetivos .lux-goal-progress-wrap {
+  height: 10px;
+  background: var(--lux-surface-muted);
+  border-radius: var(--lux-radius-pill);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.lux-objetivos .lux-goal-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--lux-primary) 0%, var(--lux-primary-light) 100%);
+  border-radius: var(--lux-radius-pill);
+  transition: width 0.3s var(--lux-ease);
+}
+
+.lux-objetivos .lux-goal-deadline {
+  font-size: 0.8125rem;
+  color: var(--lux-text-secondary);
+  margin: 4px 0 0;
+}
+
+@media (min-width: 768px) {
+  .lux-objetivos .lux-summary-cards {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .lux-objetivos .lux-goals-list {
+    padding-bottom: 40px;
+  }
+  .lux-objetivos .cal-day {
+    min-height: 64px;
+  }
+  .lux-objetivos .cal-goal {
+    font-size: 0.6875rem;
+  }
+}

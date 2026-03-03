@@ -1,0 +1,97 @@
+/**
+ * LuxFinance — Página Inicio (Home)
+ */
+
+.lux-home .lux-hero-wrap {
+  padding: 0 20px 20px;
+}
+
+.lux-home .lux-categories-wrap {
+  margin-bottom: 24px;
+}
+
+.lux-home .lux-movimientos-wrap {
+  padding: 0 20px 24px;
+}
+
+.lux-home .lux-movimientos-list {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 8px 16px;
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-home .lux-cfo-wrap {
+  padding: 0 20px 24px;
+  padding-bottom: 100px;
+}
+
+/* Historial completo #all-movements */
+.mov-day-group {
+  margin-bottom: 20px;
+}
+.mov-day-head {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--lux-text-secondary);
+  margin: 0 0 10px;
+  padding: 0;
+}
+.mov-day-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  box-shadow: var(--lux-shadow);
+  overflow: hidden;
+}
+.mov-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 16px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  font-size: 0.9375rem;
+}
+.mov-line:last-child {
+  border-bottom: none;
+}
+.mov-line.mov-subdetail {
+  padding-top: 0;
+  padding-left: 48px;
+}
+.mov-concept {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  color: var(--lux-text);
+}
+.mov-amount {
+  font-weight: 700;
+}
+.amount-ingreso { color: var(--lux-success); }
+.amount-gasto { color: var(--lux-danger); }
+.mov-actions {
+  display: flex;
+  gap: 8px;
+}
+/* FIX: Touch targets mínimos 44px en móvil para Editar/Borrar */
+.mov-actions .btn-link {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--lux-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

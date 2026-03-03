@@ -1,0 +1,151 @@
+/**
+ * LuxFinance — Design System
+ * Variables, reset, tipografía Poppins, sombras, sin bordes visibles.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  /* Fondos */
+  --lux-bg: #fafafa;
+  --lux-bg-pure: #ffffff;
+  --lux-surface: #ffffff;
+  --lux-surface-muted: #f5f4ff;
+
+  /* Primario: violeta profundo */
+  --lux-primary: #6d28d9;
+  --lux-primary-dark: #5b21b6;
+  --lux-primary-light: #8b5cf6;
+  --lux-primary-pale: rgba(109, 40, 217, 0.12);
+
+  /* Secundario: lavanda */
+  --lux-secondary: #e9d5ff;
+  --lux-secondary-bg: #f5f3ff;
+
+  /* Acentos cálidos */
+  --lux-accent-orange: #fb923c;
+  --lux-accent-pink: #f472b6;
+  --lux-accent-mint: #6ee7b7;
+  --lux-accent-blue: #93c5fd;
+
+  /* Texto */
+  --lux-text: #1a1a1f;
+  --lux-text-secondary: #6b7280;
+  --lux-text-tertiary: #9ca3af;
+  --lux-text-on-primary: #ffffff;
+
+  /* Semánticos */
+  --lux-success: #22c55e;
+  --lux-success-soft: #dcfce7;
+  --lux-danger: #ef4444;
+  --lux-danger-soft: #fee2e2;
+  --lux-warning: #f59e0b;
+
+  /* Sombras (sin bordes) */
+  --lux-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --lux-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --lux-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --lux-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+  --lux-shadow-primary: 0 8px 24px rgba(109, 40, 217, 0.25);
+  --lux-shadow-card: 0 2px 12px rgba(0, 0, 0, 0.04);
+
+  /* Border radius */
+  --lux-radius-card: 20px;
+  --lux-radius-lg: 24px;
+  --lux-radius-btn: 14px;
+  --lux-radius-input: 14px;
+  --lux-radius-icon: 14px;
+  --lux-radius-pill: 50px;
+
+  /* Transiciones */
+  --lux-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --lux-duration: 0.25s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--lux-text);
+  background: var(--lux-bg);
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Tipografía */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.lux-title-lg {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.lux-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.lux-subtitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--lux-text-secondary);
+}
+
+.lux-body {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--lux-text);
+}
+
+.lux-caption {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+}
+
+.lux-amount {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--lux-primary);
+  text-decoration: none;
+}
+
+button {
+  font-family: 'Poppins', sans-serif;
+}
+
+input, select, textarea {
+  font-family: 'Poppins', sans-serif;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* FIX: Tablas con overflow horizontal en móvil */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
