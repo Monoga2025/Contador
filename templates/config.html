@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es" data-theme="{{ theme or 'light' }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>Configuración — LuxFinance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="/static/css/design-system.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/pages/config.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="lux-app lux-config">
+    <aside class="lux-sidebar" aria-label="Navegación">
+      <div class="lux-brand">
+        <span class="lux-brand-title">LuxFinance</span>
+        <span class="lux-brand-sub">Asesor IA personal</span>
+      </div>
+      <nav class="lux-nav">
+        <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+        <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+        <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+        <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+        <a href="/config" class="lux-nav-active"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+      </nav>
+    </aside>
+
+    <header class="lux-page-header">
+      <div>
+        <h1 class="lux-greeting-title">Configuración</h1>
+        <p class="lux-greeting-sub">Ingresos y gastos fijos del mes.</p>
+      </div>
+      <a href="/" class="lux-btn lux-btn-secondary">Volver al inicio</a>
+    </header>
+
+    <main class="lux-main lux-content">
+      {% if saved %}
+      <div class="lux-banner">Configuración guardada. Se actualizaron tus movimientos fijos del mes actual.</div>
+      {% endif %}
+
+      <div class="lux-panel">
+        <h2 class="lux-title">Apariencia</h2>
+        <p class="lux-helper">Elige el tema. Se guarda automáticamente.</p>
+        <div class="lux-theme-options">
+          <label class="lux-theme-option">
+            <input type="radio" name="theme" value="dark" {{ 'checked' if theme != 'light' else '' }} />
+            <span>Oscuro</span>
+          </label>
+          <label class="lux-theme-option">
+            <input type="radio" name="theme" value="light" {{ 'checked' if theme == 'light' else '' }} />
+            <span>Claro</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="lux-panel">
+        <h2 class="lux-title">Ingresos fijos mensuales</h2>
+        <p class="lux-helper">
+          <button type="button" id="btn-suggest-categories" class="lux-btn lux-btn-secondary" style="margin-right:8px">Sugerir categorías con IA</button>
+          La IA revisa cada concepto y sugiere la categoría analítica.
+        </p>
+        <form method="post" action="/config/save" id="config-form">
+          <input type="hidden" name="section" value="all" />
+          <div class="lux-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Concepto</th>
+                  <th>Categoría</th>
+                  <th>Monto (COP)</th>
+                  <th>Día del mes</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in ingresos %}
+                <tr>
+                  <td><input type="hidden" name="ingreso_id" value="{{ item.id }}" /><input type="text" name="ingreso_category" value="{{ item.category }}" class="lux-input" /></td>
+                  <td><select name="ingreso_analytic" class="lux-select">{% for c in categorias_analiticas %}<option value="{{ c }}" {% if (item.analytic_category or 'Otros') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></td>
+                  <td><input type="number" step="0.01" name="ingreso_amount" value="{{ '%.0f'|format(item.amount) }}" class="lux-input" /></td>
+                  <td><input type="number" min="1" max="31" name="ingreso_day" value="{{ item.day }}" class="lux-input" /></td>
+                  <td class="cell-center"><input type="checkbox" name="ingreso_delete" value="1" /></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td><input type="hidden" name="ingreso_id" value="" /><input type="text" name="ingreso_category" placeholder="Nuevo ingreso" class="lux-input" /></td>
+                  <td><select name="ingreso_analytic" class="lux-select"><option value="">—</option>{% for c in categorias_analiticas %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select></td>
+                  <td><input type="number" step="0.01" name="ingreso_amount" placeholder="0" class="lux-input" /></td>
+                  <td><input type="number" min="1" max="31" name="ingreso_day" placeholder="1" class="lux-input" /></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="lux-title" style="margin-top:24px">Gastos fijos mensuales</h2>
+          <div class="lux-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Concepto</th>
+                  <th>Categoría</th>
+                  <th>Monto (COP)</th>
+                  <th>Día del mes</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in gastos %}
+                <tr>
+                  <td><input type="hidden" name="gasto_id" value="{{ item.id }}" /><input type="text" name="gasto_category" value="{{ item.category }}" class="lux-input" /></td>
+                  <td><select name="gasto_analytic" class="lux-select">{% for c in categorias_analiticas %}<option value="{{ c }}" {% if (item.analytic_category or 'Otros') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></td>
+                  <td><input type="number" step="0.01" name="gasto_amount" value="{{ '%.0f'|format(item.amount) }}" class="lux-input" /></td>
+                  <td><input type="number" min="1" max="31" name="gasto_day" value="{{ item.day }}" class="lux-input" /></td>
+                  <td class="cell-center"><input type="checkbox" name="gasto_delete" value="1" /></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td><input type="hidden" name="gasto_id" value="" /><input type="text" name="gasto_category" placeholder="Nuevo gasto" class="lux-input" /></td>
+                  <td><select name="gasto_analytic" class="lux-select"><option value="">—</option>{% for c in categorias_analiticas %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select></td>
+                  <td><input type="number" step="0.01" name="gasto_amount" placeholder="0" class="lux-input" /></td>
+                  <td><input type="number" min="1" max="31" name="gasto_day" placeholder="1" class="lux-input" /></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button type="submit" class="lux-btn lux-btn-primary" style="margin-top:24px">Guardar configuración</button>
+        </form>
+      </div>
+
+      <div class="lux-panel">
+        <h2 class="lux-title">Cómo usar esta configuración</h2>
+        <p class="lux-helper">Cada fila es un ingreso o gasto fijo que se repite cada mes. Edita nombre, monto y día. Marca "Eliminar" y guarda para borrar. Al iniciar el mes, el sistema crea los movimientos automáticamente.</p>
+      </div>
+    </main>
+
+    <nav class="lux-bottom-nav" role="navigation">
+      <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+      <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+      <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+      <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+      <a href="/config" class="lux-nav-active"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span><span class="lux-nav-dot"></span></a>
+    </nav>
+
+    <script>
+      (function() {
+        var btn = document.getElementById("btn-suggest-categories");
+        if (!btn) return;
+        btn.addEventListener("click", function() {
+          btn.disabled = true;
+          btn.textContent = "Pensando…";
+          fetch("/api/config/suggest-categories")
+            .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function(data) {
+              var suggestions = data.suggestions || [];
+              suggestions.forEach(function(s) {
+                var selector = s.type === "ingreso" ? 'input[name="ingreso_id"][value="' + s.id + '"]' : 'input[name="gasto_id"][value="' + s.id + '"]';
+                var row = document.querySelector(selector);
+                if (!row) return;
+                row = row.closest("tr");
+                var select = row.querySelector('select[name="' + s.type + '_analytic"]');
+                if (select && s.suggested) select.value = s.suggested;
+              });
+              btn.textContent = "Categorías sugeridas aplicadas";
+              setTimeout(function() { btn.disabled = false; btn.textContent = "Sugerir categorías con IA"; }, 2500);
+            })
+            .catch(function() {
+              btn.disabled = false;
+              btn.textContent = "Sugerir categorías con IA";
+              alert("No se pudo conectar con la IA. Revisa tu clave de Gemini.");
+            });
+        });
+      })();
+      (function() {
+        var radios = document.querySelectorAll('input[name="theme"]');
+        radios.forEach(function(r) {
+          r.addEventListener('change', function() {
+            var theme = this.value;
+            fetch('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ theme: theme }) })
+              .then(function(res) { if (res.ok) document.documentElement.setAttribute('data-theme', theme); });
+          });
+        });
+      })();
+    </script>
+    <script>document.addEventListener("DOMContentLoaded", function () { if (typeof lucide !== "undefined") lucide.createIcons(); });</script>
+  </body>
+  </html>

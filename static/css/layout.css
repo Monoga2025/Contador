@@ -1,0 +1,293 @@
+/**
+ * LuxFinance — Layout
+ * Navbar inferior, FAB, header de página, sidebar desktop.
+ */
+
+/* ----- Contenedor principal mobile ----- */
+.lux-app {
+  min-height: 100vh;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ----- Header de página (saludo + campana) ----- */
+.lux-page-header {
+  padding: 16px 20px 20px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--lux-bg);
+}
+
+.lux-page-header .lux-greeting-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0 0 4px;
+}
+
+.lux-page-header .lux-greeting-sub {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+  margin: 0;
+}
+
+.lux-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lux-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--lux-radius-icon);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--lux-text-secondary);
+  cursor: pointer;
+  transition: background var(--lux-duration) var(--lux-ease), color var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lux-icon-btn:hover {
+  background: var(--lux-surface-muted);
+  color: var(--lux-primary);
+}
+
+.lux-icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ----- Navbar inferior (mobile) ----- */
+.lux-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  background: var(--lux-surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 200;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.06);
+}
+
+.lux-bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  min-width: 56px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--lux-text-tertiary);
+  text-decoration: none;
+  border-radius: var(--lux-radius-btn);
+  transition: color var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lux-bottom-nav a:hover {
+  color: var(--lux-primary);
+}
+
+.lux-bottom-nav a.lux-nav-active {
+  color: var(--lux-primary);
+  font-weight: 600;
+}
+
+.lux-bottom-nav a.lux-nav-active .lux-nav-dot {
+  display: block;
+}
+
+.lux-nav-dot {
+  display: none;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--lux-primary);
+  margin-top: 2px;
+}
+
+.lux-bottom-nav .lux-nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ----- FAB central ----- */
+.lux-fab-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -24px;
+}
+
+.lux-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--lux-primary);
+  color: var(--lux-text-on-primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(109, 40, 217, 0.45);
+  transition: transform var(--lux-duration) var(--lux-ease), box-shadow var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+  z-index: 1;
+}
+
+.lux-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 28px rgba(109, 40, 217, 0.5);
+}
+
+.lux-fab:active {
+  transform: scale(0.96);
+}
+
+.lux-fab svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ----- Sidebar desktop (> 768px) ----- */
+@media (min-width: 768px) {
+  .lux-app {
+    padding-bottom: 0;
+    padding-left: 220px;
+  }
+
+  .lux-bottom-nav {
+    display: none;
+  }
+
+  .lux-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    background: var(--lux-surface);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+    padding: 24px 0;
+    z-index: 100;
+  }
+
+  .lux-sidebar .lux-brand {
+    padding: 0 20px 24px;
+    border-bottom: none;
+    margin-bottom: 20px;
+  }
+
+  .lux-sidebar .lux-brand-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--lux-text);
+  }
+
+  .lux-sidebar .lux-brand-sub {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--lux-text-secondary);
+    margin-top: 2px;
+  }
+
+  .lux-sidebar .lux-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 12px;
+  }
+
+  .lux-sidebar .lux-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--lux-text-secondary);
+    text-decoration: none;
+    border-radius: var(--lux-radius-btn);
+    transition: background var(--lux-duration) var(--lux-ease), color var(--lux-duration) var(--lux-ease);
+  }
+
+  .lux-sidebar .lux-nav a:hover {
+    background: var(--lux-surface-muted);
+    color: var(--lux-primary);
+  }
+
+  .lux-sidebar .lux-nav a.lux-nav-active {
+    background: var(--lux-primary-pale);
+    color: var(--lux-primary);
+    font-weight: 600;
+  }
+
+  .lux-sidebar .lux-nav-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .lux-sidebar .lux-fab-desktop {
+    margin: 20px 20px 0;
+    width: calc(100% - 40px);
+  }
+
+  .lux-page-header {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .lux-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+  }
+}
+
+/* Ocultar sidebar en mobile (solo se muestra en desktop) */
+.lux-sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .lux-sidebar {
+    display: block;
+  }
+}
+
+/* Contenido desktop (shell): ocultar sidebar viejo, mostrar solo main */
+.shell {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.shell .sidebar {
+  display: none;
+}
+.shell .main-area {
+  margin: 0;
+  padding: 24px 32px 40px;
+  max-width: 900px;
+  margin-left: 0;
+}
+
+/* Sección "Registro rápido" oculta: el flujo es Agregar → Manual / Voz / Imagen */
+.lux-add-via-sheet {
+  display: none !important;
+}

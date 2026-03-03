@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es" data-theme="{{ theme or 'light' }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>Objetivos — LuxFinance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="/static/css/design-system.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/pages/objetivos.css" />
+    <link rel="stylesheet" href="/static/css/tour.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="lux-app lux-objetivos">
+    <aside class="lux-sidebar" aria-label="Navegación">
+      <div class="lux-brand">
+        <span class="lux-brand-title">LuxFinance</span>
+        <span class="lux-brand-sub">Asesor IA personal</span>
+      </div>
+      <nav class="lux-nav">
+        <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+        <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+        <a href="/objetivos" class="lux-nav-active"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+        <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+        <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+      </nav>
+    </aside>
+
+    <header class="lux-page-header">
+      <div>
+        <h1 class="lux-greeting-title">Objetivos</h1>
+        <p class="lux-greeting-sub">Define metas y la IA te dice cuánto ahorrar.</p>
+      </div>
+      <div class="lux-header-actions">
+        <button type="button" class="lux-icon-btn" id="lux-tour-start" aria-label="Ayuda / Ver tour"><i data-lucide="help-circle" class="lux-nav-icon"></i></button>
+      </div>
+    </header>
+
+    <main class="lux-main">
+      <div class="lux-summary-cards" id="tour-objetivos-resumen">
+        <div class="lux-summary-card"><span>Ingresos mes</span><strong>${{ '{:,.0f}'.format(ingresos) }}</strong></div>
+        <div class="lux-summary-card"><span>Gastos mes</span><strong>${{ '{:,.0f}'.format(gastos) }}</strong></div>
+        <div class="lux-summary-card"><span>Disponible</span><strong>${{ '{:,.0f}'.format(disponible) }}</strong></div>
+      </div>
+
+      <div class="lux-balance-section" id="tour-objetivos-ahorro">
+        <div class="lux-balance-card lux-card">
+          <h2 class="lux-title">Mi ahorro actual</h2>
+          <p class="lux-caption" style="margin:0 0 12px">Cuánto tienes guardado. La IA lo usa para saber si gastas ahorros.</p>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <strong class="lux-amount" id="balance-display" style="font-size:1.25rem">${{ '{:,.0f}'.format(savings_balance) }}</strong>
+            <button type="button" id="edit-balance" class="lux-btn lux-btn-secondary">Editar</button>
+          </div>
+          <div id="balance-form" class="hidden" style="margin-top:16px">
+            <input type="number" step="0.01" id="balance-input" class="lux-input" placeholder="Ej: 500000" style="margin-bottom:10px" />
+            <button type="button" id="save-balance" class="lux-btn lux-btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lux-add-goal-section" id="tour-objetivos-agregar">
+        <div class="lux-add-goal-card lux-card">
+          <h2 class="lux-title">Agregar objetivo</h2>
+          <form id="goal-form" class="lux-form">
+            <div class="lux-field">
+              <label class="lux-label" for="goal-name">Nombre del objetivo</label>
+              <input type="text" name="name" id="goal-name" class="lux-input" placeholder="Ej: Viaje con mi novia" required />
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="goal-amount">Monto a alcanzar (COP)</label>
+              <input type="number" step="0.01" name="target_amount" id="goal-amount" class="lux-input" required />
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="goal-frequency">Frecuencia</label>
+              <select name="frequency" id="goal-frequency" class="lux-select">
+                <option value="una_vez">Una sola vez</option>
+                <option value="semanal">Cada semana</option>
+                <option value="mensual">Cada mes</option>
+                <option value="anual">Cada año</option>
+              </select>
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="goal-deadline">Fecha límite (opcional)</label>
+              <div data-open-date-picker><input type="date" name="deadline" id="goal-deadline" class="lux-input" /></div>
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="goal-notes">Notas (opcional)</label>
+              <input type="text" name="notes" id="goal-notes" class="lux-input" placeholder="Ej: Incluye tiquetes" />
+            </div>
+            <button type="submit" class="lux-btn lux-btn-primary lux-btn-full">Agregar objetivo</button>
+          </form>
+        </div>
+      </div>
+
+      <section class="panel lux-calendar-section" style="padding:0 20px 24px" id="tour-objetivos-calendario">
+        <h2 class="lux-title" style="margin-bottom:8px">Calendario de metas</h2>
+        <p class="lux-caption" style="margin:0 0 12px">Cada día con fecha límite de un objetivo se marca como meta. Toca un día para ver el detalle.</p>
+        <div id="goals-calendar" class="goals-calendar"></div>
+      </section>
+
+      <div class="lux-goals-list" id="tour-objetivos-lista">
+        <h2 class="lux-section-title" style="padding:0 0 16px">Mis objetivos</h2>
+        {% for item in goal_projections %}
+        {% set g = item.goal %}
+        {% set p = item.proyeccion %}
+        {% set pct = (g.current_saved / g.target_amount * 100) if g.target_amount else 0 %}
+        <div class="lux-goal-card">
+          <div class="lux-goal-header">
+            <h3 class="lux-goal-name">{{ g.name }}</h3>
+            <span class="lux-goal-pct">{{ '{:.0f}'.format([pct, 100]|min) }}%</span>
+          </div>
+          <div class="lux-goal-progress-wrap">
+            <div class="lux-goal-progress-fill" style="width: {{ [pct, 100]|min }}%"></div>
+          </div>
+          <p class="lux-goal-meta">${{ '{:,.0f}'.format(g.current_saved) }} / ${{ '{:,.0f}'.format(g.target_amount) }}</p>
+          {% if g.deadline %}<p class="lux-goal-deadline">Límite: {{ g.deadline.strftime('%b %Y') }}</p>{% endif %}
+          <p class="lux-caption" style="margin:8px 0 0">Necesitas: ${{ '{:,.0f}'.format(p.necesario_mensual) }}/mes · {{ p.mensaje_ajuste }}</p>
+          <p style="margin:12px 0 0;display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="lux-btn lux-btn-secondary btn-strategy" data-goal-id="{{ g.id }}">Ver estrategia IA</button>
+            <button type="button" class="lux-btn lux-btn-secondary delete-goal" data-goal-id="{{ g.id }}" style="color:var(--lux-danger)">Borrar</button>
+          </p>
+          <div id="strategy-{{ g.id }}" class="goal-strategy-output hidden"></div>
+        </div>
+        {% endfor %}
+        {% if not goal_projections %}
+        <p class="lux-caption" style="padding:0 20px">Aún no tienes objetivos. Agrega uno arriba.</p>
+        {% endif %}
+      </div>
+
+      <section id="tour-objetivos-asesor" class="panel" style="padding:20px;margin:0 20px 100px;background:var(--lux-surface);border-radius:var(--lux-radius-card);box-shadow:var(--lux-shadow)">
+        <h2 class="lux-title">Asesor IA: ¿Cuánto ahorrar?</h2>
+        <p class="lux-caption" style="margin:0 0 16px">La IA ve tu disponible y objetivos. Te dice cuánto destinar a cada meta.</p>
+        <form id="goals-advice-form">
+          <div class="lux-field">
+            <label class="lux-label">Pregunta (opcional)</label>
+            <textarea id="goals-question" class="lux-textarea" rows="3" placeholder="Ej: ¿En cuántos meses puedo cumplir el primer objetivo?"></textarea>
+          </div>
+          <button type="submit" class="lux-btn lux-btn-primary">Preguntar a la IA</button>
+        </form>
+        <div id="goals-advice-output" class="hidden" style="margin-top:20px">
+          <h3 class="lux-subtitle">Respuesta</h3>
+          <div id="goals-advice-text"></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="lux-bottom-nav" role="navigation">
+      <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+      <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+      <a href="/objetivos" class="lux-nav-active"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span><span class="lux-nav-dot"></span></a>
+      <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+      <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+    </nav>
+
+    <script>window.GOALS_FOR_CALENDAR = {{ goals_json|safe }};</script>
+    <script src="/static/objetivos.js"></script>
+    <script src="/static/js/tour.js"></script>
+    <script>document.addEventListener("DOMContentLoaded", function () { if (typeof lucide !== "undefined") lucide.createIcons(); });</script>
+  </body>
+  </html>
