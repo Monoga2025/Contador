@@ -1,0 +1,70 @@
+/**
+ * LuxFinance — Página Objetivos
+ */
+
+.lux-objetivos .lux-page-header {
+  margin-bottom: 8px;
+}
+
+.lux-objetivos .lux-summary-cards {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 20px 20px;
+  scrollbar-width: none;
+}
+
+.lux-objetivos .lux-summary-cards::-webkit-scrollbar {
+  display: none;
+}
+
+.lux-objetivos .lux-summary-card {
+  flex-shrink: 0;
+  min-width: 120px;
+  padding: 16px;
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-objetivos .lux-summary-card span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lux-text-secondary);
+}
+
+.lux-objetivos .lux-summary-card strong {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  display: block;
+  margin-top: 4px;
+}
+
+.lux-objetivos .lux-goals-list {
+  padding: 0 20px 100px;
+}
+
+.lux-objetivos .lux-balance-section,
+.lux-objetivos .lux-add-goal-section {
+  padding: 0 20px 24px;
+}
+
+.lux-objetivos .lux-balance-card,
+.lux-objetivos .lux-add-goal-card {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .lux-objetivos .lux-summary-cards {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .lux-objetivos .lux-goals-list {
+    padding-bottom: 40px;
+  }
+}

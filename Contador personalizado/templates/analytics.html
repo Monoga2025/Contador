@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es" data-theme="{{ theme or 'light' }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>Analytics — LuxFinance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="/static/css/design-system.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/pages/analytics.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="lux-app lux-analytics">
+    <aside class="lux-sidebar" aria-label="Navegación">
+      <div class="lux-brand">
+        <span class="lux-brand-title">LuxFinance</span>
+        <span class="lux-brand-sub">Asesor IA personal</span>
+      </div>
+      <nav class="lux-nav">
+        <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+        <a href="/analytics" class="lux-nav-active"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+        <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+        <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+        <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+      </nav>
+    </aside>
+
+    <header class="lux-page-header">
+      <div>
+        <h1 class="lux-greeting-title">Analytics</h1>
+        <p class="lux-greeting-sub">Evolución mensual, patrones y proyecciones.</p>
+      </div>
+    </header>
+
+    <main class="lux-main">
+      <section class="lux-chart-section">
+        <h2 class="lux-title">Evolución mensual</h2>
+        <p class="lux-helper">Ingresos vs gastos últimos 6 meses.</p>
+        <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
+      </section>
+
+      <section class="lux-chart-section">
+        <h2 class="lux-title">Patrón semanal</h2>
+        <p class="lux-helper">En qué días de la semana gastas más este mes.</p>
+        <div class="chart-wrap"><canvas id="chart-weekly"></canvas></div>
+      </section>
+
+      <section class="lux-chart-section">
+        <h2 class="lux-title">Top 10 gastos del mes</h2>
+        <div class="table-wrapper">
+          <table id="top-expenses-table" class="lux-expenses-table">
+            <thead><tr><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th></tr></thead>
+            <tbody id="top-expenses-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="lux-chart-section">
+        <h2 class="lux-title">Proyección fin de mes</h2>
+        <p class="lux-helper">Si sigues al ritmo actual.</p>
+        <div id="projection-box" class="lux-projection-box"></div>
+      </section>
+    </main>
+
+    <nav class="lux-bottom-nav" role="navigation">
+      <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+      <a href="/analytics" class="lux-nav-active"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span><span class="lux-nav-dot"></span></a>
+      <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+      <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+      <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+    </nav>
+
+    <script src="/static/analytics.js"></script>
+    <script>document.addEventListener("DOMContentLoaded", function () { if (typeof lucide !== "undefined") lucide.createIcons(); });</script>
+  </body>
+  </html>

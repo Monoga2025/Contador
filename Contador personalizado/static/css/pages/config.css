@@ -1,0 +1,95 @@
+/**
+ * LuxFinance — Página Configuración
+ */
+
+.lux-config .lux-page-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.lux-config .lux-page-header .lux-btn-secondary {
+  align-self: flex-start;
+}
+
+.lux-config .lux-content {
+  padding: 0 20px 100px;
+}
+
+.lux-config .lux-panel {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-config .lux-panel h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.lux-config .lux-panel .lux-helper {
+  font-size: 0.875rem;
+  color: var(--lux-text-secondary);
+  margin: 0 0 16px;
+}
+
+.lux-config .lux-theme-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lux-config .lux-theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--lux-text);
+}
+
+.lux-config .lux-table-wrapper {
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.lux-config table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.lux-config table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--lux-text-secondary);
+  padding: 12px 8px;
+}
+
+.lux-config table td {
+  padding: 10px 8px;
+}
+
+.lux-config table input,
+.lux-config table select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--lux-radius-input);
+  border: none;
+  background: #f3f4f6;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lux-config .lux-banner {
+  background: var(--lux-success-soft);
+  color: var(--lux-success);
+  padding: 14px 16px;
+  border-radius: var(--lux-radius-btn);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+}

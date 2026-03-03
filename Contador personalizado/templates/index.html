@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="es" data-theme="{{ theme or 'light' }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>LuxFinance — Asesor financiero IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/design-system.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/overlays.css" />
+    <link rel="stylesheet" href="/static/css/pages/home.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="lux-app lux-home">
+    <div id="loading-overlay" class="loading-overlay hidden" aria-live="polite">
+      <div class="loading-box">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Procesando…</p>
+        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+      </div>
+    </div>
+
+    <div id="modal-voice-ia" class="modal modal-fixed hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="voice"></div>
+      <div class="modal-content modal-voice-content">
+        <h3>Agregar gastos con IA</h3>
+        <p class="modal-voice-intro">Elige cómo quieres agregar tus gastos y la IA los procesará.</p>
+
+        <div class="voice-ia-chooser">
+          <button type="button" class="btn primary voice-ia-choose-btn" id="voice-ia-choose-method">
+            <span class="voice-ia-choose-label">Elegir método</span>
+            <span class="voice-ia-choose-arrow">▼</span>
+          </button>
+          <div id="voice-ia-popover" class="voice-ia-popover hidden" role="listbox">
+            <button type="button" class="voice-ia-option" data-tab="voz" role="option">🎤 Voz</button>
+            <button type="button" class="voice-ia-option" data-tab="texto" role="option">📝 Pegar texto</button>
+            <button type="button" class="voice-ia-option" data-tab="factura" role="option">📷 Subir factura</button>
+          </div>
+          <button type="button" class="voice-ia-change-method hidden" id="voice-ia-change-method">Cambiar método</button>
+        </div>
+
+        <div class="voice-ia-tabs voice-ia-tabs-legacy" aria-hidden="true">
+          <button type="button" class="voice-tab active" data-tab="voz">Voz</button>
+          <button type="button" class="voice-tab" data-tab="texto">Pegar texto</button>
+          <button type="button" class="voice-tab" data-tab="factura">Subir factura</button>
+        </div>
+
+        <div id="voice-ia-panel-voz" class="voice-ia-panel hidden">
+          <button type="button" id="voice-ia-mic" class="btn-mic" aria-label="Grabar con voz">
+            <span class="mic-icon">🎤</span>
+            <span class="mic-label">Toca para grabar</span>
+          </button>
+          <div id="voice-ia-transcript-full" class="voice-transcript-full hidden">
+            <label>Transcripción completa</label>
+            <div id="voice-ia-transcript-text" class="voice-transcript-text"></div>
+          </div>
+          <p id="voice-ia-transcribing" class="helper hidden">Transcribiendo…</p>
+        </div>
+
+        <div id="voice-ia-panel-texto" class="voice-ia-panel hidden">
+          <textarea id="voice-ia-text" rows="3" placeholder="Ej: pan 5000, café 3000, almuerzo 15000"></textarea>
+        </div>
+
+        <div id="voice-ia-panel-factura" class="voice-ia-panel hidden">
+          <label class="file-label">
+            <input type="file" id="voice-ia-file" accept="image/*" />
+            <span>Elegir imagen de factura</span>
+          </label>
+          <p id="voice-ia-filename" class="helper hidden"></p>
+        </div>
+
+        <div class="voice-ia-body hidden" id="voice-ia-body">
+          <div class="voice-ia-go">
+            <button type="button" id="voice-ia-process" class="btn primary">Procesar con IA</button>
+          </div>
+          <p id="voice-ia-status" class="voice-ia-status helper hidden"></p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" data-close-modal="voice">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="onboarding-modal" class="modal modal-fixed {{ 'hidden' if not first_time else '' }}" aria-hidden="{{ 'false' if first_time else 'true' }}">
+      <div class="modal-backdrop" data-close-onboarding></div>
+      <div class="modal-content">
+        <h3>Bienvenido a LuxFinance</h3>
+        <p class="helper">Configura en 3 pasos para que el asesor IA te ayude mejor.</p>
+        <ol class="onboarding-steps">
+          <li><strong>¿Cuánto ganas al mes?</strong> <a href="/config">Configurar ingresos fijos</a></li>
+          <li><strong>¿Cuáles son tus gastos fijos?</strong> <a href="/config">Configurar gastos fijos</a></li>
+          <li><strong>¿Tienes algún objetivo de ahorro?</strong> <a href="/objetivos">Ir a Objetivos</a></li>
+        </ol>
+        <div class="modal-actions">
+          <button type="button" class="btn primary" data-close-onboarding>Entendido</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-etiquetas" class="modal modal-fixed hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-content">
+        <h3>Reasignar etiquetas del gráfico</h3>
+        <p class="helper">Si el gráfico muestra conceptos en lugar de categorías analíticas, reasígnalos aquí.</p>
+        <div id="remap-list"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" data-close-modal>Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar desktop -->
+    <aside class="lux-sidebar" aria-label="Navegación">
+      <div class="lux-brand">
+        <span class="lux-brand-title">LuxFinance</span>
+        <span class="lux-brand-sub">Asesor IA personal</span>
+      </div>
+      <nav class="lux-nav">
+        <a href="/" class="lux-nav-active"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+        <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+        <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+        <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+        <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+      </nav>
+      <button type="button" class="lux-btn lux-btn-primary lux-btn-full lux-fab-desktop" id="figma-fab-add-desktop" aria-label="Registrar movimiento"><i data-lucide="plus" style="width:20px;height:20px"></i> Registrar</button>
+    </aside>
+
+    <!-- Header de página -->
+    <header class="lux-page-header" role="banner">
+      <div>
+        <h1 class="lux-greeting-title">Hola{% if profile_name %}, {{ profile_name }}{% endif %}</h1>
+        <p class="lux-greeting-sub">Resumen del mes</p>
+      </div>
+      <div class="lux-header-actions">
+        <div class="lux-badge-wrap">
+          <button type="button" class="lux-icon-btn" aria-label="Notificaciones"><i data-lucide="bell" class="lux-nav-icon"></i></button>
+          <span id="notif-badge-lux" class="lux-badge pulse hidden" aria-hidden="true">0</span>
+        </div>
+        <button type="button" class="lux-icon-btn" id="figma-filter" aria-label="Filtros"><i data-lucide="filter" class="lux-nav-icon"></i></button>
+      </div>
+    </header>
+
+    <main class="lux-main">
+      <!-- Card Hero -->
+      <div class="lux-hero-wrap">
+        <div class="lux-card-hero lux-anim-card">
+          <div class="lux-hero-score">
+            <span class="lux-hero-score-value">{{ score_financiero or 0 }}</span>
+            <span class="lux-hero-score-unit">pts</span>
+          </div>
+          <p class="lux-hero-label">Disponible este mes</p>
+          <p class="lux-hero-amount">${{ '{:,.0f}'.format(real_disponible) }}</p>
+          <div class="lux-hero-row">
+            <div class="lux-hero-metric">
+              <p class="lux-hero-metric-label">Ingresos</p>
+              <p class="lux-hero-metric-value">${{ '{:,.0f}'.format(real_ingresos) }}</p>
+            </div>
+            <div class="lux-hero-metric">
+              <p class="lux-hero-metric-label">Gastos</p>
+              <p class="lux-hero-metric-value">${{ '{:,.0f}'.format(real_gastos) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards de categorías (scroll horizontal) -->
+      <div class="lux-categories-wrap">
+        <div class="lux-cards-scroll">
+          {% set cat_emojis = {'Vivienda':'🏠','Transporte':'🚗','Gastos moto':'🏍️','Alimentación':'🍽️','Servicios':'💡','Educación':'📚','Salud':'❤️','Ocio y pareja':'🎭','Lujos':'✨','Otros':'📦'} %}
+          {% set cat_colors = ['lux-cat-lavanda','lux-cat-melocoton','lux-cat-menta','lux-cat-azul','lux-cat-rosa','lux-cat-ambar'] %}
+          {% for c in categorias_analiticas %}
+          <a href="#all-movements" class="lux-card-category lux-anim-card {{ cat_colors[loop.index0 % 6] }}" data-category="{{ c }}" title="Filtrar {{ c }}">
+            <span class="lux-cat-emoji">{{ cat_emojis.get(c, '📦') }}</span>
+            <span class="lux-cat-label">{{ c }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Movimientos recientes -->
+      <div class="lux-movimientos-wrap">
+        <div class="lux-section-head">
+          <h2 class="lux-section-title">Movimientos recientes</h2>
+          <a href="#all-movements" class="lux-link-all">Ver todos</a>
+        </div>
+        <div class="lux-movimientos-list">
+          <ul class="lux-mov-list" id="figma-mov-list">
+            {% for t in movimientos_recientes_7 %}
+            <li class="lux-mov-item" data-tx-id="{{ t.id }}" data-tx-date="{{ t.date.isoformat() }}" data-tx-amount="{{ t.amount }}" data-tx-type="{{ t.type }}" data-tx-category="{{ t.category or '' }}" data-tx-concept="{{ (t.concept or t.category) or '' }}" data-tx-description="{{ t.description or '' }}">
+              <div class="lux-mov-icon-wrap {{ 'ingreso' if t.type == 'ingreso' else 'gasto' }}">{{ '↑' if t.type == 'ingreso' else '↓' }}</div>
+              <div class="lux-mov-body">
+                <p class="lux-mov-concept">{{ t.concept or t.category or t.description or 'Sin concepto' }}</p>
+                <p class="lux-mov-category">{{ t.category or '—' }} · {{ t.date.strftime('%d %b') }}</p>
+              </div>
+              <span class="lux-mov-amount {{ 'ingreso' if t.type == 'ingreso' else 'gasto' }}">{% if t.type == 'ingreso' %}+{% else %}−{% endif %} ${{ '{:,.0f}'.format(t.amount) }}</span>
+              <button type="button" class="lux-icon-btn figma-mov-menu" aria-label="Opciones" data-tx-id="{{ t.id }}" data-tx-date="{{ t.date.isoformat() }}" data-tx-amount="{{ t.amount }}" data-tx-type="{{ t.type }}" data-tx-category="{{ t.category or '' }}" data-tx-concept="{{ (t.concept or t.category) or '' }}" data-tx-description="{{ t.description or '' }}"><i data-lucide="more-vertical" style="width:18px;height:18px"></i></button>
+            </li>
+            {% endfor %}
+          </ul>
+          {% if not movimientos_recientes_7 %}
+          <p class="lux-caption" style="padding:16px;margin:0">Aún no hay movimientos. Toca + para agregar.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Panel CFO (Chat with expert) -->
+      <div class="lux-cfo-wrap">
+        <div class="lux-cfo-panel lux-anim-card">
+          <div class="lux-cfo-header">
+            <div class="lux-cfo-avatar"><i data-lucide="brain" style="width:24px;height:24px;color:#fff"></i></div>
+            <div>
+              <h3 class="lux-cfo-title">Tu asesor CFO</h3>
+              <p class="lux-cfo-subtitle" id="cfo-subtitle-lux">Revisa tu situación y te da el plan del mes.</p>
+            </div>
+          </div>
+          <div class="lux-cfo-actions">
+            <button type="button" class="lux-btn lux-btn-primary" id="btn-cfo-plan-lux">Ver plan del mes</button>
+            <button type="button" class="lux-btn lux-btn-secondary" id="btn-cfo-chat-lux">Pregúntale algo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial completo (misma estructura para filtros y editar/borrar) -->
+      <section id="all-movements" style="padding:0 20px 100px">
+        <div class="lux-section-head" style="margin-bottom:12px">
+          <h2 class="lux-section-title">Todos los movimientos</h2>
+          <button type="button" id="btn-toggle-filters" class="lux-btn lux-btn-secondary" style="padding:8px 14px;font-size:0.875rem" aria-label="Filtros"><i data-lucide="filter" style="width:16px;height:16px"></i> Filtros</button>
+        </div>
+        <div id="filters-panel" class="filters-panel collapsed" style="margin-bottom:16px;padding:16px;background:var(--lux-surface-muted);border-radius:var(--lux-radius-btn)">
+          <label for="filtro-categoria" class="lux-label">Categoría</label>
+          <select id="filtro-categoria" class="lux-select" style="margin-bottom:12px" aria-label="Filtrar por categoría">
+            <option value="">Todas</option>
+            {% for c in categorias_analiticas %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+          <label for="filtro-tipo" class="lux-label">Tipo</label>
+          <select id="filtro-tipo" class="lux-select" style="margin-bottom:12px" aria-label="Filtrar por tipo">
+            <option value="">Todos</option>
+            <option value="ingreso">Ingreso</option>
+            <option value="gasto">Gasto</option>
+          </select>
+          <button type="button" id="filtro-aplicar" class="lux-btn lux-btn-primary">Aplicar</button>
+        </div>
+        <div class="movimientos-compact-wrap">
+          {% for grupo in movimientos_por_dia %}
+          <div class="mov-day-group" data-date="{{ grupo.date_iso }}">
+            <h3 class="mov-day-head">{{ grupo.date_label }}</h3>
+            <ul class="mov-day-list">
+              {% for t in grupo.transactions %}
+              <li class="mov-line {{ 'ingreso' if t.type == 'ingreso' else 'gasto' }}" data-tx-id="{{ t.id }}" data-tx-date="{{ t.date.isoformat() }}" data-tx-type="{{ t.type }}" data-tx-category="{{ t.category or '' }}" data-tx-amount="{{ t.amount }}" data-tx-concept="{{ (t.concept or t.category) or '' }}" data-tx-description="{{ t.description or '' }}">
+                <span class="mov-concept">{{ t.concept or t.category or t.description or 'Sin concepto' }}</span>
+                <span class="mov-amount {{ 'amount-ingreso' if t.type == 'ingreso' else 'amount-gasto' }}">{% if t.type == 'ingreso' %}+{% else %}−{% endif %} ${{ '{:,.0f}'.format(t.amount) }}</span>
+                <span class="mov-actions">
+                  <button type="button" class="btn-link edit-tx-compact" title="Editar" data-tx-id="{{ t.id }}" data-tx-date="{{ t.date.isoformat() }}" data-tx-amount="{{ t.amount }}" data-tx-type="{{ t.type }}" data-tx-category="{{ t.category or '' }}" data-tx-concept="{{ (t.concept or t.category) or '' }}" data-tx-description="{{ t.description or '' }}">Editar</button>
+                  <button type="button" class="btn-link delete-tx-compact" title="Borrar" data-tx-id="{{ t.id }}">Borrar</button>
+                </span>
+              </li>
+              {% if line_items_by_tx.get(t.id) %}
+              <li class="mov-line mov-subdetail">
+                <span class="mov-concept">↳ {% for li in line_items_by_tx[t.id] %}{{ li.concept }} ${{ '{:,.0f}'.format(li.amount) }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          {% else %}
+          <p class="lux-caption">No hay movimientos este mes.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <!-- Navbar inferior mobile -->
+    <nav class="lux-bottom-nav" role="navigation" aria-label="Navegación principal">
+      <a href="/" class="lux-nav-active" aria-current="page"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span><span class="lux-nav-dot"></span></a>
+      <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+      <div class="lux-fab-wrap">
+        <button type="button" class="lux-fab" id="figma-fab-add" aria-label="Agregar movimiento"><i data-lucide="plus" style="width:28px;height:28px;color:#fff"></i></button>
+      </div>
+      <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+      <a href="/perfil"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+      <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+    </nav>
+
+    <!-- Drawer menú (hamburger) -->
+    <div id="figma-drawer" class="figma-drawer" aria-hidden="true">
+      <div class="figma-drawer-backdrop" id="figma-drawer-backdrop" aria-hidden="true"></div>
+      <div class="figma-drawer-panel">
+        <nav class="figma-drawer-nav">
+          <a href="/">Resumen</a>
+          <a href="/analytics">Analytics</a>
+          <a href="/objetivos">Objetivos</a>
+          <a href="/perfil">Perfil</a>
+          <a href="/config">Configuración</a>
+        </nav>
+      </div>
+    </div>
+    <!-- Sheet filtros móvil -->
+    <div id="figma-filter-sheet" class="figma-registro-overlay" aria-hidden="true">
+      <div class="figma-registro-sheet">
+        <h2>Filtros</h2>
+        <div class="field">
+          <label for="figma-filtro-categoria">Categoría</label>
+          <select id="figma-filtro-categoria">
+            <option value="">Todas</option>
+            {% for c in categorias_analiticas %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="figma-filtro-tipo">Tipo</label>
+          <select id="figma-filtro-tipo">
+            <option value="">Todos</option>
+            <option value="ingreso">Ingreso</option>
+            <option value="gasto">Gasto</option>
+          </select>
+        </div>
+        <button type="button" id="figma-filtro-aplicar" class="btn-full">Aplicar</button>
+      </div>
+    </div>
+    <!-- Sheet agregar (abre con +): primero elige método, luego formulario o IA -->
+    <div id="figma-registro-overlay" class="lux-sheet-overlay" aria-hidden="true">
+      <div class="lux-sheet lux-sheet-add" role="dialog" aria-labelledby="lux-add-title">
+        <!-- Paso 1: ¿Cómo quieres agregar? -->
+        <div id="lux-add-chooser" class="lux-add-step">
+          <button type="button" class="lux-sheet-close" id="lux-add-close" aria-label="Cerrar"><i data-lucide="x" style="width:24px;height:24px"></i></button>
+          <h2 id="lux-add-title" class="lux-sheet-title">¿Cómo quieres agregar?</h2>
+          <p class="lux-sheet-subtitle">Elige una opción para registrar tu movimiento.</p>
+          <div class="lux-add-options">
+            <button type="button" class="lux-add-option" data-method="manual" id="lux-add-manual">
+              <span class="lux-add-option-icon"><i data-lucide="edit-3" style="width:28px;height:28px"></i></span>
+              <span class="lux-add-option-label">Manual</span>
+              <span class="lux-add-option-desc">Concepto, monto y categoría</span>
+            </button>
+            <button type="button" class="lux-add-option" data-method="voice" id="lux-add-voice">
+              <span class="lux-add-option-icon"><i data-lucide="mic" style="width:28px;height:28px"></i></span>
+              <span class="lux-add-option-label">Voz o IA</span>
+              <span class="lux-add-option-desc">Di o pega el texto, la IA lo procesa</span>
+            </button>
+            <button type="button" class="lux-add-option" data-method="image" id="lux-add-image">
+              <span class="lux-add-option-icon"><i data-lucide="image" style="width:28px;height:28px"></i></span>
+              <span class="lux-add-option-label">Imagen</span>
+              <span class="lux-add-option-desc">Sube una factura o ticket</span>
+            </button>
+          </div>
+        </div>
+        <!-- Paso 2: Formulario manual -->
+        <div id="lux-add-form-step" class="lux-add-step hidden">
+          <button type="button" class="lux-sheet-back" id="lux-add-back" aria-label="Volver"><i data-lucide="arrow-left" style="width:22px;height:22px"></i></button>
+          <h2 class="lux-sheet-title">Nuevo movimiento</h2>
+          <form id="figma-registro-form" class="lux-add-form">
+            <div class="lux-field">
+              <label class="lux-label" for="figma-concept">Concepto</label>
+              <input type="text" id="figma-concept" name="description" class="lux-input" placeholder="Ej. Supermercado" required />
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="figma-amount">Monto (COP)</label>
+              <input type="number" step="0.01" id="figma-amount" name="amount" class="lux-input" placeholder="0" required />
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="figma-date">Fecha</label>
+              <div class="date-input-wrap" data-open-date-picker><input type="date" id="figma-date" name="date_str" class="lux-input input-date-dmy" value="{{ today }}" required /></div>
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="figma-type">Tipo</label>
+              <select id="figma-type" name="type" class="lux-select">
+                <option value="gasto" selected>Gasto</option>
+                <option value="ingreso">Ingreso</option>
+              </select>
+            </div>
+            <div class="lux-field">
+              <label class="lux-label" for="figma-category">Categoría</label>
+              <select id="figma-category" name="category" class="lux-select">
+                {% for c in categorias_analiticas %}
+                <option value="{{ c }}">{{ c }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="lux-btn lux-btn-primary lux-btn-full">Guardar movimiento</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="fixed-spacer" aria-hidden="true"></div>
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div class="brand-text">
+            <span class="brand-title">LuxFinance</span>
+            <span class="brand-sub">Asesor IA personal</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/" class="nav-item nav-item-active">Resumen</a>
+          <a href="/analytics" class="nav-item">Analytics</a>
+          <a href="/objetivos" class="nav-item">Objetivos</a>
+          <a href="/perfil" class="nav-item nav-item-perfil" id="nav-perfil">Perfil <span id="perfil-badge" class="perfil-badge hidden" aria-label="Perfil incompleto">!</span></a>
+          <a href="/config" class="nav-item">Configuración</a>
+        </nav>
+        <div id="notif-wrap" class="nav-notif-wrap hidden"><span id="notif-badge" class="notif-badge">0</span> <span class="notif-label">notificaciones</span></div>
+        {% if config_saved %}
+        <div class="sidebar-note">Configuración actualizada este mes.</div>
+        {% endif %}
+      </aside>
+
+      <main class="main-area">
+        <!-- Registro rápido: oculto; todo el flujo va por el botón Agregar (chooser Manual / Voz / Imagen) -->
+        <section class="panel panel-registro panel-registro-full panel-first lux-add-via-sheet" id="panel-registro-legacy" aria-hidden="true">
+          <h2>Registro rápido de ingreso / gasto</h2>
+          <div class="quick-actions top-actions">
+            <button type="button" id="btn-voice-ia" class="btn accent-btn" title="Agregar gastos con voz o texto usando IA">
+              🎤 Agregar gastos con voz / IA
+            </button>
+          </div>
+          <form id="quick-form" method="post" action="/add-transaction" class="form-table">
+          <div class="quick-table-wrap">
+          <table class="quick-table">
+            <thead>
+              <tr>
+                <th class="col-incluir">Incluir</th>
+                <th>Concepto</th>
+                <th>Monto (COP)</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Categoría</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="quick-row">
+                <td class="cell-incluir">
+                  <input type="checkbox" name="include_row" value="1" checked aria-label="Incluir en guardar" class="include-row-cb" />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="description"
+                    class="description-input-multi"
+                    id="description-input"
+                    placeholder="Detalle del movimiento"
+                    aria-label="Concepto"
+                    title="Concepto"
+                  />
+                </td>
+                <td>
+                  <input type="number" step="0.01" name="amount" aria-label="Monto en COP" placeholder="0" title="Monto (COP)" />
+                </td>
+                <td>
+                  <div class="date-input-wrap" data-open-date-picker>
+                    <input
+                      type="date"
+                      name="date_str"
+                      class="date-input-multi input-date-dmy"
+                      id="date-input"
+                      value="{{ today }}"
+                      aria-label="Fecha (día/mes/año)"
+                      title="Toca para abrir calendario"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <select name="type" aria-label="Tipo: ingreso o gasto" title="Tipo">
+                    <option value="ingreso">Ingreso</option>
+                    <option value="gasto" selected>Gasto</option>
+                  </select>
+                </td>
+                <td class="cell-category-auto">
+                  <span class="helper">La IA asigna al guardar</span>
+                  <input type="hidden" name="category" value="" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+            <div class="quick-actions">
+              <button type="button" id="add-row" class="btn secondary">+ Agregar fila</button>
+              <button type="submit" class="btn primary">Guardar movimientos</button>
+            </div>
+          </form>
+
+          <p class="helper mt-1">
+            <button type="button" id="toggle-gasto-detalle" class="btn secondary">
+              + Gasto con subgastos (detalle de factura)
+            </button>
+          </p>
+          <div id="gasto-detalle-panel" class="gasto-detalle-panel hidden">
+            <h3>Gasto con detalle (ej. compra en tienda con ítems de la factura)</h3>
+            <div class="form">
+              <div class="field">
+                <label>Concepto del gasto (ej. Compra cosas de novia - Local MISUNO)</label>
+                <input type="text" id="gasto-detalle-concept" placeholder="Nombre del gasto o tienda" />
+              </div>
+              <div class="field-inline">
+                <div class="field">
+                  <label>Fecha</label>
+                  <div class="date-input-wrap" data-open-date-picker><input type="date" id="gasto-detalle-date" class="input-date-dmy" aria-label="Fecha (día/mes/año)" /></div>
+                </div>
+                <div class="field">
+                  <label>Categoría</label>
+                  <select id="gasto-detalle-category">
+                    {% for c in categorias_analiticas %}
+                    <option value="{{ c }}">{{ c }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label>Subgastos (ítems de la factura)</label>
+                <table class="quick-table" id="gasto-detalle-items">
+                  <thead>
+                    <tr><th>Concepto (peluche, moñas, etc.)</th><th>Monto (COP)</th><th></th></tr>
+                  </thead>
+                  <tbody id="gasto-detalle-tbody">
+                    <tr class="detail-row">
+                      <td><input type="text" class="detail-concept" placeholder="ej. peluche" /></td>
+                      <td><input type="number" step="0.01" class="detail-amount" placeholder="0" /></td>
+                      <td><button type="button" class="icon-btn remove-detail-row" title="Quitar" aria-label="Quitar ítem">×</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="button" id="add-detail-row" class="btn secondary btn-sm mt-1">+ Agregar ítem</button>
+              </div>
+              <p class="helper"><strong>Total:</strong> $<span id="gasto-detalle-total">0</span></p>
+              <button type="button" id="save-gasto-detalle" class="btn primary">Guardar gasto con detalle</button>
+            </div>
+          </div>
+        </section>
+
+        <header class="top dashboard-header">
+          <div class="top-title">
+            <h1>Resumen del mes</h1>
+            <p class="subtitle">
+              Ve tus números clave de un vistazo y decide con calma cuánto gastar,
+              ahorrar e invertir (incluyendo planes con tu novia).
+            </p>
+          </div>
+          <div class="summary-cards">
+            <div class="card ingresos">
+              <span>Ingresos</span>
+              <strong>${{ '{:,.0f}'.format(real_ingresos) }}</strong>
+            </div>
+            <div class="card gastos">
+              <span>Gastos</span>
+              <strong>${{ '{:,.0f}'.format(real_gastos) }}</strong>
+            </div>
+            <div class="card disponible">
+              <span>Disponible</span>
+              <strong>${{ '{:,.0f}'.format(real_disponible) }}</strong>
+            </div>
+          </div>
+          <div id="hints-panel" class="hints-panel hidden">
+            <span class="hints-title">Tu asesor va un paso adelante</span>
+            <ul id="hints-list"></ul>
+          </div>
+
+          <div id="mission-control" class="mission-control hidden">
+            <div class="mc-col mc-estado">
+              <h3 class="mc-title">Estado del día</h3>
+              <p class="mc-fecha" id="mc-fecha"></p>
+              <div class="mc-metric">
+                <span class="mc-label">Score financiero</span>
+                <div class="mc-score-wrap">
+                  <div class="mc-score-bar"><div class="mc-score-fill" id="mc-score-fill"></div></div>
+                  <span class="mc-score-value" id="mc-score-value">—</span>
+                  <span class="mc-score-vs" id="mc-score-vs"></span>
+                </div>
+              </div>
+              <div class="mc-metric">
+                <span class="mc-label">Runway</span>
+                <strong class="mc-value" id="mc-runway">—</strong> días
+              </div>
+              <div class="mc-metric">
+                <span class="mc-label">Tasa de ahorro</span>
+                <strong class="mc-value" id="mc-tasa">—</strong>% <span class="mc-meta">(meta: 20%)</span>
+              </div>
+            </div>
+            <div class="mc-col mc-proyeccion">
+              <h3 class="mc-title">Proyección fin de mes</h3>
+              <p class="mc-proy-text" id="mc-proy-text">Cargando…</p>
+              <p class="mc-proy-ritmo" id="mc-proy-ritmo"></p>
+            </div>
+            <div class="mc-col mc-briefing">
+              <h3 class="mc-title">Asesor dice hoy</h3>
+              <ul id="daily-briefing-list" class="briefing-list"></ul>
+              <button type="button" id="btn-preguntale" class="btn secondary btn-sm">Pregúntale algo</button>
+            </div>
+          </div>
+
+          <section id="cfo-plan" class="cfo-panel panel">
+            <div class="cfo-header">
+              <div class="cfo-avatar">
+                <span class="cfo-icon" aria-hidden="true">🧠</span>
+              </div>
+              <div class="cfo-header-text">
+                <h3>CFO Personal</h3>
+                <span class="cfo-subtitle" id="cfo-subtitle">Revisando tu situación…</span>
+              </div>
+              <button type="button" id="btn-refresh-cfo" class="icon-btn" title="Actualizar análisis" aria-label="Actualizar plan del CFO">↻</button>
+            </div>
+            <div id="cfo-plan-content" class="cfo-content">
+              <div class="loading-skeleton cfo-loading">Analizando tu mes…</div>
+            </div>
+            <div class="cfo-actions">
+              <button type="button" id="btn-cfo-chat" class="btn secondary">💬 Pregúntale algo</button>
+              <button type="button" id="btn-cfo-income-ideas" class="btn secondary">📈 Ideas de ingreso</button>
+            </div>
+          </section>
+
+          <section id="semaphore-panel" class="panel semaphore-panel hidden">
+            <h2>Semáforo de categorías</h2>
+            <p class="helper">Este mes vs promedio últimos 3 meses. Verde: OK. Amarillo: +15–30%. Rojo: +30% o más.</p>
+            <div class="table-wrapper">
+              <table class="semaphore-table">
+                <thead>
+                  <tr>
+                    <th>Categoría</th>
+                    <th>Este mes</th>
+                    <th>Promedio</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="semaphore-tbody"></tbody>
+              </table>
+            </div>
+          </section>
+
+        </header>
+
+        <div id="modal-editar-movimiento" class="modal modal-fixed hidden" aria-hidden="true">
+          <div class="modal-backdrop" data-close-modal="editar-mov"></div>
+          <div class="modal-content">
+            <h3>Editar registro real</h3>
+            <form id="form-editar-movimiento" class="form">
+              <input type="hidden" id="edit-tx-id" name="tx_id" value="" />
+              <div class="field">
+                <label for="edit-tx-date">Fecha</label>
+                <div class="date-input-wrap" data-open-date-picker><input type="date" id="edit-tx-date" name="date_str" class="input-date-dmy" required aria-label="Fecha (día/mes/año)" /></div>
+              </div>
+              <div class="field">
+                <label for="edit-tx-concept">Concepto</label>
+                <input type="text" id="edit-tx-concept" name="concept" placeholder="Ej. Supermercado" aria-label="Concepto" />
+              </div>
+              <div class="field">
+                <label for="edit-tx-amount">Monto (COP)</label>
+                <input type="number" step="0.01" id="edit-tx-amount" name="amount" required aria-label="Monto" />
+              </div>
+              <div class="field">
+                <label for="edit-tx-type">Tipo</label>
+                <select id="edit-tx-type" name="type" aria-label="Tipo">
+                  <option value="ingreso">Ingreso</option>
+                  <option value="gasto">Gasto</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="edit-tx-category">Categoría</label>
+                <select id="edit-tx-category" name="category" aria-label="Categoría">
+                  {% for c in categorias_analiticas %}
+                  <option value="{{ c }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="field">
+                <label for="edit-tx-description">Descripción (opcional)</label>
+                <input type="text" id="edit-tx-description" name="description" placeholder="Notas" aria-label="Descripción" />
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn secondary" data-close-modal="editar-mov">Cancelar</button>
+                <button type="submit" class="btn primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <button type="button" id="btn-movimientos-esperados" class="fab fab-esperados" title="Movimientos esperados del mes" aria-label="Ver movimientos esperados">
+          <span class="fab-icon">📋</span>
+          <span class="fab-label">Esperados</span>
+        </button>
+        <div id="drawer-esperados" class="drawer-esperados hidden">
+          <div class="drawer-backdrop" data-close-drawer="esperados"></div>
+          <div class="drawer-content">
+            <h3>Movimientos esperados del mes</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr><th>Día</th><th>Movimiento</th><th>Monto</th></tr>
+                </thead>
+                <tbody>
+                  {% for t in transactions_expected %}
+                  <tr>
+                    <td>{{ t.date.strftime('%d') }}</td>
+                    <td>
+                      <span class="tag {{ 'tag-ingreso' if t.type == 'ingreso' else 'tag-gasto' }}">{{ 'Ingreso' if t.type == 'ingreso' else 'Gasto' }}</span>
+                      <span class="movement-category">{{ t.concept or t.category }}</span>
+                    </td>
+                    <td class="{{ 'amount-ingreso' if t.type == 'ingreso' else 'amount-gasto' }}">${{ '{:,.0f}'.format(t.amount) }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn secondary" data-close-drawer="esperados">Cerrar</button>
+          </div>
+        </div>
+
+        <button type="button" id="toggle-ia" class="fab fab-ia" title="Asesor financiero IA" aria-label="Abrir asesor financiero IA">
+          <span class="fab-icon">🤖</span>
+        </button>
+
+        <div id="ia-drawer" class="ia-drawer ia-drawer-fixed hidden">
+          <div class="ia-drawer-backdrop" data-close-ia></div>
+          <div class="ia-drawer-box">
+            <button type="button" class="ia-drawer-close" data-close-ia aria-label="Cerrar">×</button>
+            <h3>Tu asesor financiero IA</h3>
+            <p class="helper">Pregunta o cuéntale una decisión. El historial de esta sesión se envía para contexto.</p>
+            <div id="advice-chips" class="advice-chips">
+              <button type="button" class="chip" data-question="¿Cómo voy este mes?">¿Cómo voy este mes?</button>
+              <button type="button" class="chip" data-question="¿Puedo permitirme un gasto extra?">¿Puedo permitirme un gasto extra?</button>
+              <button type="button" class="chip" data-question="Dame un plan de ahorro">Dame un plan de ahorro</button>
+              <button type="button" class="chip" data-question="¿En qué estoy gastando más?">¿En qué estoy gastando más?</button>
+            </div>
+            <div id="advice-chat-history" class="advice-chat-history"></div>
+            <form id="advice-form" class="form">
+              <div class="field">
+                <label for="question">Pregunta o decisión</label>
+                <textarea id="question" rows="3" placeholder="Escribe aquí..." required></textarea>
+              </div>
+              <button type="submit" class="btn primary">Enviar</button>
+            </form>
+            <div id="advice-output" class="advice-output hidden">
+              <h3>Respuesta</h3>
+              <div id="advice-text"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof lucide !== "undefined") lucide.createIcons();
+        var btnPlan = document.getElementById("btn-cfo-plan-lux");
+        var btnChat = document.getElementById("btn-cfo-chat-lux");
+        var cfoSection = document.getElementById("cfo-plan");
+        var iaDrawer = document.getElementById("ia-drawer");
+        if (btnPlan && cfoSection) btnPlan.addEventListener("click", function () { cfoSection.scrollIntoView({ behavior: "smooth" }); });
+        if (btnChat && iaDrawer) btnChat.addEventListener("click", function () { iaDrawer.classList.remove("hidden"); });
+      });
+    </script>
+  </body>
+  </html>
+

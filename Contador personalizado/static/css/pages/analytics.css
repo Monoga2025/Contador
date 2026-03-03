@@ -1,0 +1,89 @@
+/**
+ * LuxFinance — Página Analytics
+ * Gráficos y proyección con cards, sin tablas visibles como bloque principal.
+ */
+
+.lux-analytics .lux-page-header {
+  margin-bottom: 8px;
+}
+
+.lux-analytics .lux-chart-section {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  margin: 0 20px 20px;
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-analytics .lux-chart-section h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.lux-analytics .lux-chart-section .lux-helper {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+  margin: 0 0 16px;
+}
+
+.lux-analytics .chart-wrap {
+  position: relative;
+  height: 240px;
+}
+
+.lux-analytics .lux-projection-box {
+  background: var(--lux-surface-muted);
+  border-radius: var(--lux-radius-btn);
+  padding: 20px;
+  margin-top: 12px;
+}
+
+/* Tabla top gastos: aspecto de lista (sin bordes visibles) */
+.lux-analytics .lux-expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.lux-analytics .lux-expenses-table thead {
+  display: none;
+}
+.lux-analytics .lux-expenses-table tbody tr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.lux-analytics .lux-expenses-table tbody tr:last-child {
+  border-bottom: none;
+}
+.lux-analytics .lux-expenses-table td:nth-child(1) {
+  font-size: 0.8125rem;
+  color: var(--lux-text-secondary);
+}
+.lux-analytics .lux-expenses-table td:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  color: var(--lux-text);
+}
+.lux-analytics .lux-expenses-table td:nth-child(3) {
+  font-size: 0.8125rem;
+  color: var(--lux-text-secondary);
+}
+.lux-analytics .lux-expenses-table td:nth-child(4) {
+  font-weight: 700;
+  color: var(--lux-danger);
+}
+
+@media (min-width: 768px) {
+  .lux-analytics .lux-chart-section {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

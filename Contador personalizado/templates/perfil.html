@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es" data-theme="{{ theme or 'light' }}">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tu perfil — LuxFinance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" href="/static/css/design-system.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/animations.css" />
+    <link rel="stylesheet" href="/static/css/pages/perfil.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  </head>
+  <body class="lux-app lux-perfil">
+    <aside class="lux-sidebar" aria-label="Navegación">
+      <div class="lux-brand">
+        <span class="lux-brand-title">LuxFinance</span>
+        <span class="lux-brand-sub">Asesor IA personal</span>
+      </div>
+      <nav class="lux-nav">
+        <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+        <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+        <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+        <a href="/perfil" class="lux-nav-active"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span></a>
+        <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+      </nav>
+    </aside>
+
+    <header class="lux-page-header">
+      <div>
+        <h1 class="lux-greeting-title">Tu perfil</h1>
+        <p class="lux-greeting-sub">El asesor te conoce mejor</p>
+      </div>
+    </header>
+
+    <main class="lux-main">
+      <div class="lux-profile-header">
+        <div class="lux-profile-avatar" id="perfil-avatar-iniciales">?</div>
+        <h2 class="lux-profile-name" id="perfil-nombre-display">—</h2>
+        <p class="lux-profile-meta" id="perfil-meta-display">Completa tu perfil</p>
+      </div>
+
+      <div class="lux-id-card">
+        <p class="lux-id-label">Personality Data</p>
+        <h3 class="lux-id-title">ID Card</h3>
+        <div class="lux-id-row"><strong>Score:</strong> <span id="perfil-score-display">—</span></div>
+        <div class="lux-id-row"><strong>Nivel:</strong> Asesor personal</div>
+      </div>
+
+      <div class="lux-form-section">
+        <form id="perfil-form" class="lux-form">
+          <p class="lux-form-section-title">Datos básicos</p>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-nombre">Nombre</label>
+            <input type="text" id="perfil-nombre" name="nombre" class="lux-input" placeholder="Tu nombre" />
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-edad">Edad</label>
+            <input type="number" id="perfil-edad" name="edad" min="1" max="120" class="lux-input" placeholder="Ej: 28" />
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-ciudad">Ciudad</label>
+            <input type="text" id="perfil-ciudad" name="ciudad" class="lux-input" placeholder="Ej: Bogotá" />
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-ocupacion">¿Qué haces para vivir?</label>
+            <input type="text" id="perfil-ocupacion" name="ocupacion" class="lux-input" placeholder="Empleado, Freelancer, etc." />
+          </div>
+
+          <p class="lux-form-section-title">Situación y contexto</p>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-situacion">Tu situación actual</label>
+            <p class="lux-caption" style="margin:0 0 8px">¿Dónde estás hoy? ¿Vives solo? ¿Deudas?</p>
+            <textarea id="perfil-situacion" name="situacion_actual" class="lux-textarea" rows="4" placeholder="Ej: Trabajo freelance, vivo solo en arriendo."></textarea>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-fuentes">Fuentes de ingreso (actuales y futuras)</label>
+            <textarea id="perfil-fuentes" name="fuentes_ingreso" class="lux-textarea" rows="3" placeholder="Ej: Diseño web, edición de video."></textarea>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-habilidades">Habilidades y recursos</label>
+            <textarea id="perfil-habilidades" name="habilidades" class="lux-textarea" rows="3" placeholder="Ej: UI/UX, Figma, redes sociales."></textarea>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-restricciones">Compromisos y restricciones</label>
+            <textarea id="perfil-restricciones" name="restricciones" class="lux-textarea" rows="3" placeholder="Ej: Arriendo día 5, ayudo a mi mamá."></textarea>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-vision">Tu visión y sueños</label>
+            <textarea id="perfil-vision" name="vision" class="lux-textarea" rows="4" placeholder="Ej: En 3 años ingresos pasivos, viajar 2 meses al año."></textarea>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label">Tolerancia al riesgo</label>
+            <div style="display:flex;gap:16px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.9375rem"><input type="radio" name="tolerancia_riesgo" value="conservador" /> Conservador</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.9375rem"><input type="radio" name="tolerancia_riesgo" value="moderado" checked /> Moderado</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.9375rem"><input type="radio" name="tolerancia_riesgo" value="agresivo" /> Agresivo</label>
+            </div>
+          </div>
+          <div class="lux-field">
+            <label class="lux-label" for="perfil-contexto">Contexto personal / pareja</label>
+            <textarea id="perfil-contexto" name="contexto_personal" class="lux-textarea" rows="3" placeholder="Opcional"></textarea>
+          </div>
+          <button type="submit" class="lux-btn lux-btn-primary lux-btn-full">Guardar perfil</button>
+        </form>
+        <p id="perfil-completeness" class="lux-caption" style="margin-top:20px">
+          <span id="perfil-percent">0</span>% completado — Mientras más completes, mejores consejos recibes.
+        </p>
+      </div>
+    </main>
+
+    <nav class="lux-bottom-nav" role="navigation">
+      <a href="/"><i data-lucide="home" class="lux-nav-icon"></i><span>Inicio</span></a>
+      <a href="/analytics"><i data-lucide="bar-chart-3" class="lux-nav-icon"></i><span>Analítica</span></a>
+      <a href="/objetivos"><i data-lucide="target" class="lux-nav-icon"></i><span>Objetivos</span></a>
+      <a href="/perfil" class="lux-nav-active"><i data-lucide="user" class="lux-nav-icon"></i><span>Perfil</span><span class="lux-nav-dot"></span></a>
+      <a href="/config"><i data-lucide="settings" class="lux-nav-icon"></i><span>Config</span></a>
+    </nav>
+
+    <script>
+      (function () {
+        const form = document.getElementById("perfil-form");
+        const percentEl = document.getElementById("perfil-percent");
+        const completenessEl = document.getElementById("perfil-completeness");
+        const avatarEl = document.getElementById("perfil-avatar-iniciales");
+        const nombreDisplay = document.getElementById("perfil-nombre-display");
+
+        function loadProfile() {
+          fetch("/api/profile")
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              document.getElementById("perfil-nombre").value = data.nombre || "";
+              document.getElementById("perfil-edad").value = data.edad != null ? data.edad : "";
+              document.getElementById("perfil-ciudad").value = data.ciudad || "";
+              document.getElementById("perfil-ocupacion").value = data.ocupacion || "";
+              document.getElementById("perfil-situacion").value = data.situacion_actual || "";
+              document.getElementById("perfil-fuentes").value = data.fuentes_ingreso || "";
+              document.getElementById("perfil-habilidades").value = data.habilidades || "";
+              document.getElementById("perfil-restricciones").value = data.restricciones || "";
+              document.getElementById("perfil-vision").value = data.vision || "";
+              document.getElementById("perfil-contexto").value = data.contexto_personal || "";
+              var risk = (data.tolerancia_riesgo || "moderado").toLowerCase();
+              var radio = document.querySelector('input[name="tolerancia_riesgo"][value="' + risk + '"]');
+              if (radio) radio.checked = true;
+              if (nombreDisplay) nombreDisplay.textContent = (data.nombre || "").trim() || "—";
+              if (avatarEl) avatarEl.textContent = (data.nombre || "?").trim().charAt(0).toUpperCase() || "?";
+            })
+            .catch(function () {});
+        }
+        function loadCompleteness() {
+          fetch("/api/profile/completeness")
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              percentEl.textContent = data.percent;
+              completenessEl.classList.toggle("complete-80", data.percent >= 80);
+              var scoreEl = document.getElementById("perfil-score-display");
+              if (scoreEl) scoreEl.textContent = data.percent + " pts";
+            })
+            .catch(function () {});
+        }
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var payload = {
+            nombre: document.getElementById("perfil-nombre").value.trim(),
+            edad: document.getElementById("perfil-edad").value.trim() ? parseInt(document.getElementById("perfil-edad").value, 10) : null,
+            ciudad: document.getElementById("perfil-ciudad").value.trim(),
+            ocupacion: document.getElementById("perfil-ocupacion").value.trim(),
+            situacion_actual: document.getElementById("perfil-situacion").value.trim(),
+            fuentes_ingreso: document.getElementById("perfil-fuentes").value.trim(),
+            habilidades: document.getElementById("perfil-habilidades").value.trim(),
+            restricciones: document.getElementById("perfil-restricciones").value.trim(),
+            vision: document.getElementById("perfil-vision").value.trim(),
+            contexto_personal: document.getElementById("perfil-contexto").value.trim(),
+          };
+          var riskRadio = document.querySelector('input[name="tolerancia_riesgo"]:checked');
+          payload.tolerancia_riesgo = riskRadio ? riskRadio.value : "moderado";
+          fetch("/api/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+            .then(function (r) {
+              if (r.ok) {
+                loadCompleteness();
+                loadProfile();
+                completenessEl.textContent = "✅ Perfil guardado. " + percentEl.textContent + "% completado.";
+              }
+            })
+            .catch(function () {});
+        });
+        loadProfile();
+        loadCompleteness();
+      })();
+    </script>
+    <script>document.addEventListener("DOMContentLoaded", function () { if (typeof lucide !== "undefined") lucide.createIcons(); });</script>
+  </body>
+  </html>

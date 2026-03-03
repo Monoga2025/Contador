@@ -1,0 +1,735 @@
+/**
+ * LuxFinance — Componentes
+ * Cards, botones, inputs, badges, panel CFO.
+ */
+
+/* ----- Card Hero (fondo violeta, resumen del mes) ----- */
+.lux-card-hero {
+  background: linear-gradient(145deg, var(--lux-primary-dark) 0%, var(--lux-primary) 50%, var(--lux-primary-light) 100%);
+  color: var(--lux-text-on-primary);
+  border-radius: var(--lux-radius-lg);
+  padding: 24px;
+  box-shadow: var(--lux-shadow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.lux-card-hero .lux-hero-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.lux-card-hero .lux-hero-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.lux-card-hero .lux-hero-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.lux-card-hero .lux-hero-metric {
+  flex: 1;
+}
+
+.lux-card-hero .lux-hero-metric-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.lux-card-hero .lux-hero-metric-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.lux-card-hero .lux-hero-score {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: right;
+}
+
+.lux-card-hero .lux-hero-score-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.lux-card-hero .lux-hero-score-unit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* ----- Cards de métricas rápidas (categorías scroll) ----- */
+.lux-cards-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 16px 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.lux-cards-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.lux-card-category {
+  flex-shrink: 0;
+  width: 80px;
+  min-height: 90px;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--lux-shadow-card);
+  text-decoration: none;
+  color: var(--lux-text);
+  transition: transform var(--lux-duration) var(--lux-ease), box-shadow var(--lux-duration) var(--lux-ease);
+}
+
+.lux-card-category:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-card-category .lux-cat-emoji {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.lux-card-category .lux-cat-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--lux-text-secondary);
+  line-height: 1.2;
+}
+
+/* Colores pastel por categoría (nth-child o data-cat) */
+.lux-card-category.lux-cat-lavanda { background: #ede9fe; }
+.lux-card-category.lux-cat-melocoton { background: #ffedd5; }
+.lux-card-category.lux-cat-menta { background: #d1fae5; }
+.lux-card-category.lux-cat-azul { background: #dbeafe; }
+.lux-card-category.lux-cat-rosa { background: #fce7f3; }
+.lux-card-category.lux-cat-ambar { background: #fef3c7; }
+
+/* ----- Card superficie blanca genérica ----- */
+.lux-card {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+}
+
+.lux-card:hover {
+  box-shadow: var(--lux-shadow-md);
+}
+
+/* ----- Lista movimientos recientes ----- */
+.lux-mov-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lux-mov-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border: none;
+  border-bottom: none;
+}
+
+.lux-mov-item:not(:last-child) {
+  border-bottom: none;
+}
+
+.lux-mov-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.lux-mov-icon-wrap.ingreso {
+  background: var(--lux-success-soft);
+  color: var(--lux-success);
+}
+
+.lux-mov-icon-wrap.gasto {
+  background: var(--lux-danger-soft);
+  color: var(--lux-danger);
+}
+
+.lux-mov-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.lux-mov-concept {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--lux-text);
+  margin: 0 0 2px;
+}
+
+.lux-mov-category {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+  margin: 0;
+}
+
+.lux-mov-amount {
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.lux-mov-amount.ingreso {
+  color: var(--lux-success);
+}
+
+.lux-mov-amount.gasto {
+  color: var(--lux-danger);
+}
+
+/* ----- Panel CFO (Chat with expert) ----- */
+.lux-cfo-panel {
+  background: linear-gradient(135deg, var(--lux-primary-pale) 0%, var(--lux-secondary-bg) 100%);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.lux-cfo-panel .lux-cfo-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.lux-cfo-panel .lux-cfo-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--lux-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lux-cfo-panel .lux-cfo-avatar svg {
+  width: 24px;
+  height: 24px;
+}
+
+.lux-cfo-panel .lux-cfo-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0 0 4px;
+}
+
+.lux-cfo-panel .lux-cfo-subtitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.lux-cfo-panel .lux-cfo-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ----- Cards de objetivos ----- */
+.lux-goal-card {
+  background: var(--lux-surface);
+  border-radius: var(--lux-radius-card);
+  padding: 20px;
+  box-shadow: var(--lux-shadow);
+  margin-bottom: 16px;
+}
+
+.lux-goal-card:hover {
+  box-shadow: var(--lux-shadow-md);
+}
+
+.lux-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lux-goal-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0;
+}
+
+.lux-goal-pct {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--lux-primary);
+}
+
+.lux-goal-progress-wrap {
+  height: 8px;
+  background: var(--lux-surface-muted);
+  border-radius: var(--lux-radius-pill);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.lux-goal-progress-fill {
+  height: 100%;
+  border-radius: var(--lux-radius-pill);
+  background: linear-gradient(90deg, var(--lux-primary), var(--lux-success));
+  transition: width 0.6s var(--lux-ease);
+}
+
+.lux-goal-meta {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+}
+
+.lux-goal-deadline {
+  font-size: 0.75rem;
+  color: var(--lux-text-tertiary);
+  margin-top: 4px;
+}
+
+/* ----- Botones ----- */
+.lux-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  border-radius: var(--lux-radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s var(--lux-ease), box-shadow var(--lux-duration) var(--lux-ease), background var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lux-btn:active {
+  transform: scale(0.97);
+}
+
+.lux-btn-primary {
+  background: var(--lux-primary);
+  color: var(--lux-text-on-primary);
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.35);
+}
+
+.lux-btn-primary:hover {
+  background: var(--lux-primary-dark);
+  box-shadow: 0 6px 20px rgba(109, 40, 217, 0.4);
+}
+
+.lux-btn-secondary {
+  background: transparent;
+  color: var(--lux-primary);
+  box-shadow: 0 0 0 1.5px var(--lux-primary);
+}
+
+.lux-btn-secondary:hover {
+  background: var(--lux-primary-pale);
+}
+
+.lux-btn-full {
+  width: 100%;
+}
+
+/* ----- Inputs ----- */
+.lux-field {
+  margin-bottom: 20px;
+}
+
+.lux-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lux-text);
+  margin-bottom: 8px;
+}
+
+.lux-input,
+.lux-select,
+.lux-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: var(--lux-text);
+  background: #f3f4f6;
+  border: none;
+  border-radius: var(--lux-radius-input);
+  transition: box-shadow var(--lux-duration) var(--lux-ease);
+  box-sizing: border-box;
+}
+
+.lux-input::placeholder,
+.lux-textarea::placeholder {
+  color: var(--lux-text-tertiary);
+}
+
+.lux-input:focus,
+.lux-select:focus,
+.lux-textarea:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--lux-primary);
+}
+
+.lux-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Chips seleccionables (categoría) */
+.lux-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lux-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  border-radius: var(--lux-radius-pill);
+  border: none;
+  background: var(--lux-surface-muted);
+  color: var(--lux-text-secondary);
+  cursor: pointer;
+  transition: background var(--lux-duration) var(--lux-ease), color var(--lux-duration) var(--lux-ease);
+}
+
+.lux-chip:hover {
+  background: var(--lux-secondary);
+  color: var(--lux-primary);
+}
+
+.lux-chip.active {
+  background: var(--lux-primary);
+  color: var(--lux-text-on-primary);
+}
+
+/* Panel filtros */
+.filters-panel.collapsed {
+  display: none;
+}
+.filters-panel.open {
+  display: block;
+}
+
+/* ----- Badge notificaciones ----- */
+.lux-badge-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.lux-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--lux-danger);
+  border-radius: var(--lux-radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ----- Section title + Ver todos ----- */
+.lux-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 20px;
+}
+
+.lux-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0;
+}
+
+.lux-link-all {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lux-primary);
+}
+
+.lux-link-all:hover {
+  text-decoration: underline;
+}
+
+/* ----- Sheet registro (overlay + panel) ----- */
+#figma-registro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 400;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+#figma-registro-overlay.open {
+  display: flex;
+}
+#figma-registro-overlay .figma-registro-sheet {
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--lux-surface);
+  border-radius: 24px 24px 0 0;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.12);
+}
+#figma-registro-overlay .figma-registro-sheet::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: var(--lux-text-tertiary);
+  opacity: 0.5;
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+#figma-registro-overlay .figma-registro-sheet h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+#figma-registro-overlay .figma-registro-sheet .field {
+  margin-bottom: 18px;
+}
+#figma-registro-overlay .figma-registro-sheet label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lux-text);
+  margin-bottom: 8px;
+  display: block;
+}
+#figma-registro-overlay .figma-registro-sheet input,
+#figma-registro-overlay .figma-registro-sheet select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--lux-radius-input);
+  border: none;
+  background: #f3f4f6;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+#figma-registro-overlay .figma-registro-sheet input:focus,
+#figma-registro-overlay .figma-registro-sheet select:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--lux-primary);
+}
+#figma-registro-overlay .figma-registro-sheet .btn-full {
+  width: 100%;
+  padding: 16px;
+  margin-top: 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--lux-radius-btn);
+  background: var(--lux-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+#figma-registro-overlay .figma-registro-sheet .btn-full:active {
+  transform: scale(0.98);
+}
+
+/* ----- Sheet Agregar (chooser + formulario manual) ----- */
+.lux-sheet-overlay,
+.figma-registro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 400;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lux-sheet-overlay.open,
+.figma-registro-overlay.open {
+  display: flex;
+}
+.lux-sheet {
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--lux-bg-pure);
+  border-radius: 24px 24px 0 0;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+.lux-sheet::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: var(--lux-text-tertiary);
+  opacity: 0.5;
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.lux-sheet-close,
+.lux-sheet-back {
+  position: absolute;
+  top: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lux-surface-muted);
+  border: none;
+  color: var(--lux-text-secondary);
+  cursor: pointer;
+  transition: background var(--lux-duration) var(--lux-ease), color var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.lux-sheet-close:hover,
+.lux-sheet-back:hover {
+  background: var(--lux-primary-pale);
+  color: var(--lux-primary);
+}
+.lux-sheet-close {
+  right: 20px;
+}
+.lux-sheet-back {
+  left: 20px;
+}
+.lux-sheet-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  margin: 0 0 8px;
+  padding-right: 44px;
+}
+.lux-sheet-subtitle {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+  margin: 0 0 24px;
+}
+.lux-add-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lux-add-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  text-align: left;
+  background: var(--lux-surface);
+  border: none;
+  border-radius: var(--lux-radius-card);
+  box-shadow: var(--lux-shadow-card);
+  cursor: pointer;
+  transition: transform var(--lux-duration) var(--lux-ease), box-shadow var(--lux-duration) var(--lux-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.lux-add-option:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--lux-shadow);
+}
+.lux-add-option:active {
+  transform: scale(0.99);
+}
+.lux-add-option-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--lux-primary-pale);
+  color: var(--lux-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lux-add-option-icon i,
+.lux-add-option-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.lux-add-option-label {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--lux-text);
+  display: block;
+  margin-bottom: 2px;
+}
+.lux-add-option-desc {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--lux-text-secondary);
+}
+.lux-add-form .lux-field {
+  margin-bottom: 18px;
+}
+.lux-add-form .lux-btn {
+  margin-top: 8px;
+}
